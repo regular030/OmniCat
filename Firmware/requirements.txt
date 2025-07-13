@@ -7,3 +7,4 @@ Firmware.flask
 picamera2
 cv2
 time
+multiprocessing
