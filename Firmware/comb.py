@@ -148,6 +148,9 @@ if __name__ == '__main__':
     except pygame.error:
         print("No joystick detected. Please connect a PS4 controller.")
         exit()
-    process = Process(target=controller_function)
-    process.start()
-    app.run(host='0.0.0.0', port=5000)
+    p = Process(target=controller_function, daemon=True)
+    p.start()
+
+    app.run(host='0.0.0.0', port=5000,
+            debug=False,
+            use_reloader=False)
