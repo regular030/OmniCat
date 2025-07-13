@@ -49,13 +49,6 @@ def flywheels_off():
 pygame.init()
 pygame.joystick.init()
 
-try:
-        joystick = pygame.joystick.Joystick(0)
-        joystick.init()
-        print(f"Connected to: {joystick.get_name()}")
-except pygame.error:
-        print("No joystick detected. Please connect a PS4 controller.")
-
 def controller_function():
     try:
         while True:
@@ -148,6 +141,13 @@ def video_feed():
           mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-  thread = Process(target=controller_function)
-  thread.start()
-  app.run(host='0.0.0.0', port=5000)
+    try:
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
+        print(f"Connected to: {joystick.get_name()}")
+    except pygame.error:
+        print("No joystick detected. Please connect a PS4 controller.")
+    thread = Process(target=controller_function)
+    thread.start()
+    app.run(host='0.0.0.0', port=5000)
+    print("Flask server is running!")
