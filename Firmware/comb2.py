@@ -115,9 +115,11 @@ def hardware_update_loop():
                 if current:
                     flywheels_on()
                     pixels.fill((255, 0, 0))  # Red
+                    pixels.show()
                 else:
                     flywheels_off()
                     pixels.fill((255, 255, 0))  # Yellow
+                    pixels.show()
                 last_state = current
 
             time.sleep(0.05)
