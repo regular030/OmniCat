@@ -81,7 +81,7 @@ def controller_function():
                 drive(0, 0)
 
             # Check X button (button 2) to turn flywheel ON
-            if joystick.get_button(2):
+            if joystick.get_button(0):
                 with flywheel_lock:
                     if not flywheel_state["on"]:
                         print("X button pressed — Flywheels ON")
