@@ -93,12 +93,6 @@ from picamera2 import Picamera2
 import cv2
 import time
 
-#use flask as web server to recieve data
-app = Flask(__name__)
-picam2 = Picamera2()
-picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
-picam2.start()
-
 #helpers 2.0
 def generate_frames():
   while True:
@@ -149,5 +143,12 @@ if __name__ == '__main__':
         print("No joystick detected. Please connect a PS4 controller.")
     thread = Process(target=controller_function)
     thread.start()
+    print("Thread began")
+
+    print("Starting server...")
+    app = Flask(__name__)
+    picam2 = Picamera2()
+    picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
+    picam2.start()
     app.run(host='0.0.0.0', port=5000)
     print("Flask server is running!")
