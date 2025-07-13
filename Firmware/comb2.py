@@ -20,7 +20,10 @@ NEOPIXEL_PIN = board.D21
 NUM_PIXELS = 2
 BRIGHTNESS = 0.5
 
-pixels = neopixel.NeoPixel(NEOPIXEL_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=True)
+pixels = neopixel.NeoPixel(
+    NEOPIXEL_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=False
+)
+neopixel_lock = threading.Lock()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup([LEFT_IN1, LEFT_IN2, RIGHT_IN3, RIGHT_IN4, FLYWHEEL_AA, FLYWHEEL_AB], GPIO.OUT)
@@ -63,16 +66,13 @@ def controller_function():
         while True:
             pygame.event.pump()
 
-            # Read joystick axes
             x = joystick.get_axis(0)
             y = -joystick.get_axis(1)
 
-            # Only print if joystick moved significantly
             if abs(x - last_x) > 0.1 or abs(y - last_y) > 0.1:
                 print(f"Joystick moved: X={x:.2f}, Y={y:.2f}")
                 last_x, last_y = x, y
 
-            # Drive logic
             if abs(y) > 0.1 or abs(x) > 0.1:
                 left = y + x
                 right = y - x
@@ -80,14 +80,12 @@ def controller_function():
             else:
                 drive(0, 0)
 
-            # Check X button (button 2) to turn flywheel ON
             if joystick.get_button(0):
                 with flywheel_lock:
                     if not flywheel_state["on"]:
                         print("X button pressed — Flywheels ON")
                     flywheel_state["on"] = True
 
-            # Check O button (button 1) to turn flywheel OFF
             elif joystick.get_button(1):
                 with flywheel_lock:
                     if flywheel_state["on"]:
@@ -103,7 +101,7 @@ def controller_function():
         with flywheel_lock:
             flywheel_state["on"] = False
 
-# ----- Hardware update loop running on main thread -----
+# ----- Hardware update loop -----
 def hardware_update_loop():
     last_state = None
     try:
@@ -114,12 +112,14 @@ def hardware_update_loop():
             if current != last_state:
                 if current:
                     flywheels_on()
-                    pixels.fill((255, 0, 0))  # Red
-                    pixels.show()
+                    with neopixel_lock:
+                        pixels.fill((255, 0, 0))
+                        pixels.show()
                 else:
                     flywheels_off()
-                    pixels.fill((255, 255, 0))  # Yellow
-                    pixels.show()
+                    with neopixel_lock:
+                        pixels.fill((255, 255, 0))
+                        pixels.show()
                 last_state = current
 
             time.sleep(0.05)
@@ -128,16 +128,15 @@ def hardware_update_loop():
     finally:
         drive(0, 0)
         flywheels_off()
-        pixels.fill((0, 0, 0))  # Turn off LEDs before exit
-        pixels.show()           # Update LEDs to off state
-        pixels.deinit()         # Clean up NeoPixel resources
+        with neopixel_lock:
+            pixels.fill((0, 0, 0))
+            pixels.show()
+            pixels.deinit()
         GPIO.cleanup()
 
 # ----- Flask Camera Stream -----
 app = Flask(__name__)
 picam2 = Picamera2()
-picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
-picam2.start()
 
 def generate_frames():
     while True:
@@ -176,17 +175,17 @@ def index():
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(generate_frames(),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # ----- Main -----
 if __name__ == '__main__':
-    # Start controller thread (handles pygame joystick input and driving)
     controller_thread = threading.Thread(target=controller_function, daemon=True)
     controller_thread.start()
     print("Controller thread started.")
 
-    # Run hardware update loop on main thread (updates neopixel and flywheel GPIO)
+    picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
+    picam2.start()
+
     try:
         hardware_update_loop()
     except KeyboardInterrupt:
