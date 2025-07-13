@@ -42,6 +42,10 @@ def flywheels_off():
     GPIO.output(FLYWHEEL_AB, GPIO.LOW)
     pixels.fill((255, 255, 0))  # Yellow
 
+# ----- Shared state for flywheel control -----
+flywheel_state = {"on": False}
+flywheel_lock = threading.Lock()
+
 # ----- Controller logic -----
 def controller_function():
     pygame.init()
@@ -56,8 +60,6 @@ def controller_function():
         return
 
     last_x, last_y = 0, 0
-    x_pressed = False
-    o_pressed = False
 
     try:
         while True:
@@ -80,28 +82,47 @@ def controller_function():
             else:
                 drive(0, 0)
 
-            # Check X button (button 2)
+            # Check X button (button 2) to turn flywheel ON
             if joystick.get_button(2):
-                if not x_pressed:
-                    print("X button pressed — Flywheels ON")
-                    x_pressed = True
-                    flywheels_on()
-            else:
-                x_pressed = False
+                with flywheel_lock:
+                    if not flywheel_state["on"]:
+                        print("X button pressed — Flywheels ON")
+                    flywheel_state["on"] = True
 
-            # Check O button (button 1)
-            if joystick.get_button(1):
-                if not o_pressed:
-                    print("O button pressed — Flywheels OFF")
-                    o_pressed = True
-                    flywheels_off()
-            else:
-                o_pressed = False
+            # Check O button (button 1) to turn flywheel OFF
+            elif joystick.get_button(1):
+                with flywheel_lock:
+                    if flywheel_state["on"]:
+                        print("O button pressed — Flywheels OFF")
+                    flywheel_state["on"] = False
 
             time.sleep(0.05)
 
     except KeyboardInterrupt:
         print("Shutting down controller thread...")
+    finally:
+        drive(0, 0)
+        with flywheel_lock:
+            flywheel_state["on"] = False
+
+# ----- Hardware update loop running on main thread -----
+def hardware_update_loop():
+    last_state = None
+    try:
+        while True:
+            with flywheel_lock:
+                current = flywheel_state["on"]
+
+            if current != last_state:
+                if current:
+                    flywheels_on()
+                else:
+                    flywheels_off()
+                last_state = current
+
+            time.sleep(0.05)
+    except KeyboardInterrupt:
+        pass
     finally:
         drive(0, 0)
         flywheels_off()
@@ -155,9 +176,13 @@ def video_feed():
 
 # ----- Main -----
 if __name__ == '__main__':
-    # Use threading instead of multiprocessing
+    # Start controller thread (handles pygame joystick input and driving)
     controller_thread = threading.Thread(target=controller_function, daemon=True)
     controller_thread.start()
     print("Controller thread started.")
-    print("Starting Flask server...")
-    app.run(host='0.0.0.0', port=5000)
+
+    # Run hardware update loop on main thread (updates neopixel and flywheel GPIO)
+    try:
+        hardware_update_loop()
+    except KeyboardInterrupt:
+        print("Exiting main program...")
