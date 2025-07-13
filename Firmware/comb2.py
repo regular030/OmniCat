@@ -55,30 +55,51 @@ def controller_function():
         print("No joystick detected.")
         return
 
+    last_x, last_y = 0, 0
+    x_pressed = False
+    o_pressed = False
+
     try:
         while True:
             pygame.event.pump()
+
+            # Read joystick axes
             x = joystick.get_axis(0)
             y = -joystick.get_axis(1)
 
-            flywheel_button = joystick.get_button(5)
-            if abs(y) > 0.1:
-                direction = 1 if y > 0 else -1
-                if abs(x) < 0.3:
-                    drive(direction, direction)
-                elif x > 0.3:
-                    drive(direction, 0)
-                elif x < -0.3:
-                    drive(0, direction)
+            # Only print if joystick moved significantly
+            if abs(x - last_x) > 0.1 or abs(y - last_y) > 0.1:
+                print(f"Joystick moved: X={x:.2f}, Y={y:.2f}")
+                last_x, last_y = x, y
+
+            # Drive logic
+            if abs(y) > 0.1 or abs(x) > 0.1:
+                left = y + x
+                right = y - x
+                drive(left, right)
             else:
                 drive(0, 0)
 
-            if flywheel_button:
-                flywheels_on()
+            # Check X button (button 2)
+            if joystick.get_button(2):
+                if not x_pressed:
+                    print("X button pressed — Flywheels ON")
+                    x_pressed = True
+                    flywheels_on()
             else:
-                flywheels_off()
+                x_pressed = False
+
+            # Check O button (button 1)
+            if joystick.get_button(1):
+                if not o_pressed:
+                    print("O button pressed — Flywheels OFF")
+                    o_pressed = True
+                    flywheels_off()
+            else:
+                o_pressed = False
 
             time.sleep(0.05)
+
     except KeyboardInterrupt:
         print("Shutting down controller thread...")
     finally:
