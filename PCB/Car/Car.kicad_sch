@@ -2751,7 +2751,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector:FanPinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "JST:JST 1x3"
 			(at 57.15 102.87 0)
 			(effects
 				(font
@@ -2822,7 +2822,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector:JWT_A3963_1x02_P3.96mm_Vertical"
+		(property "Footprint" "JST:JST 1x2"
 			(at 99.06 82.55 0)
 			(effects
 				(font
@@ -3226,7 +3226,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x12_P2.54mm_Vertical"
+		(property "Footprint" "JST:JST 1x12"
 			(at 59.69 72.39 0)
 			(effects
 				(font
@@ -3460,7 +3460,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector:FanPinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "JST:JST 1x3"
 			(at 54.61 167.64 0)
 			(effects
 				(font
@@ -3533,7 +3533,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Connector:JWT_A3963_1x02_P3.96mm_Vertical"
+		(property "Footprint" "JST:JST 1x2"
 			(at 123.19 133.35 0)
 			(effects
 				(font
@@ -3603,7 +3603,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical"
+		(property "Footprint" "JST:JST 1x6"
 			(at 176.53 109.22 0)
 			(effects
 				(font
@@ -3817,7 +3817,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector:JWT_A3963_1x02_P3.96mm_Vertical"
+		(property "Footprint" "JST:JST 1x2"
 			(at 99.06 100.33 0)
 			(effects
 				(font
@@ -3952,7 +3952,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector:JWT_A3963_1x02_P3.96mm_Vertical"
+		(property "Footprint" "JST:JST 1x2"
 			(at 99.06 138.43 0)
 			(effects
 				(font
@@ -4020,7 +4020,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector:JWT_A3963_1x02_P3.96mm_Vertical"
+		(property "Footprint" "JST:JST 1x2"
 			(at 99.06 120.65 0)
 			(effects
 				(font
@@ -4090,7 +4090,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector:FanPinHeader_1x03_P2.54mm_Vertical"
+		(property "Footprint" "JST:JST 1x3"
 			(at 54.61 179.07 0)
 			(effects
 				(font
@@ -4302,7 +4302,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector:FanPinHeader_1x04_P2.54mm_Vertical"
+		(property "Footprint" "JST:JST 1x4"
 			(at 105.41 55.88 0)
 			(effects
 				(font
@@ -4378,7 +4378,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Connector:JWT_A3963_1x02_P3.96mm_Vertical"
+		(property "Footprint" "JST:JST 1x2"
 			(at 124.46 93.98 0)
 			(effects
 				(font

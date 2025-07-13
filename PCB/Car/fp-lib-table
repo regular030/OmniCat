@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "SC1176")(type "KiCad")(uri "${KIPRJMOD}/FilesNeeded/SC1176")(options "")(descr ""))
   (lib (name "lm2596")(type "KiCad")(uri "${KIPRJMOD}/FilesNeeded/lm2596")(options "")(descr ""))
+  (lib (name "JST")(type "KiCad")(uri "${KIPRJMOD}/FilesNeeded/JST.pretty")(options "")(descr ""))
 )

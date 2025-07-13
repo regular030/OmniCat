@@ -1,4 +1,4 @@
-23848321324063137
+23857083167283764
 .kicad_sym
 DIODE-1N4148
 
@@ -63377,6 +63377,41 @@ THT
 0
 4
 2
+JST
+JST 1x2
+
+
+0
+2
+2
+JST
+JST 1x3
+
+
+0
+3
+3
+JST
+JST 1x4
+
+
+0
+4
+4
+JST
+JST 1x6
+
+
+0
+6
+6
+JST
+JST 1x12
+
+
+0
+12
+12
 Jumper
 SolderJumper-2_P1.3mm_Bridged2Bar_Pad1.0x1.5mm
 SMD Solder Jumper, 1x1.5mm Pads, 0.3mm gap, bridged with 2 copper strips
