@@ -1,4 +1,4 @@
-from multiprocessing import Process
+import threading
 import pygame
 import RPi.GPIO as GPIO
 import time
@@ -155,9 +155,9 @@ def video_feed():
 
 # ----- Main -----
 if __name__ == '__main__':
-    controller_process = Process(target=controller_function)
-    controller_process.start()
-    print("Controller process started.")
+    # Use threading instead of multiprocessing
+    controller_thread = threading.Thread(target=controller_function, daemon=True)
+    controller_thread.start()
+    print("Controller thread started.")
     print("Starting Flask server...")
     app.run(host='0.0.0.0', port=5000)
-
