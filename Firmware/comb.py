@@ -49,14 +49,50 @@ def flywheels_off():
 pygame.init()
 pygame.joystick.init()
 
-def controller_function():
-    try:
+try:
         joystick = pygame.joystick.Joystick(0)
         joystick.init()
         print(f"Connected to: {joystick.get_name()}")
     except pygame.error:
         print("No joystick detected. Please connect a PS4 controller.")
         exit()
+
+def controller_function():
+    try:
+        while True:
+            pygame.event.pump()
+
+            x = joystick.get_axis(0)   #left stick X
+            y = -joystick.get_axis(1)  #left stick Y
+
+            flywheel_button = joystick.get_button(5)
+            if abs(y) > 0.1:
+                direction = 1 if y > 0 else -1
+                if abs(x) < 0.3:
+                    drive(direction, direction)
+                elif x > 0.3:
+                    drive(direction, 0)  #turn right
+                elif x < -0.3:
+                    drive(0, direction)  #turn left
+            else:
+                drive(0, 0)
+
+            #flywheel control
+            if flywheel_button:
+                flywheels_on()
+            else:
+                flywheels_off()
+
+            time.sleep(0.05)
+
+    except KeyboardInterrupt:
+        print("Shutting down...")
+
+    finally:
+        drive(0, 0)
+        flywheels_off()
+        GPIO.cleanup()
+
 
 # ----- setup the controller connection and pins -----
 
