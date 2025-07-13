@@ -154,3 +154,11 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000,
             debug=False,
             use_reloader=False)
+    
+    #something to keep checking afterwards
+    while True:
+        if not p.is_alive(): #check if controller is running
+            print("Controller process died!  Restarting…")
+            p = Process(target=controller_function, daemon=True)
+            p.start()
+        time.sleep(2)
