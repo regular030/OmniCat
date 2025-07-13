@@ -1,0 +1,19 @@
+BOM,
+,
+Count,Item
+5,N20 Micro DC Gear Motor
+1,130 Size Brushed DC Motor
+1,Raspberry Pi Zero 2
+1,Custom PCB
+1,Buck Converter
+1,Interface L298N DC Motor Driver
+1,PS5 Controller
+,
+CAD,
+1,Main body
+1,face
+1,pipe
+1,flexwheel big
+1,flexwheel small
+4,wheels
+10,furballs
