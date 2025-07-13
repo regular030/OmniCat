@@ -1,5 +1,8 @@
 # OMNI OCTOCAT
 
+For millions of us, Octocat has been a staple part of our lives, a hardworking and cheerful best friend. What would be more wonderful than to extend that friendship to the real world.
+
+
 Hello! This is our submission project for Hack Club's Highway Hackathon at Github HQ.
 With the mission to build something intricate, wacky and helpful, we decided to build a personal home assistant:
 none other than Octocat itself!
