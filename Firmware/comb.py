@@ -149,6 +149,7 @@ if __name__ == '__main__':
         print("No joystick detected. Please connect a PS4 controller.")
         exit()
     p = Process(target=controller_function, daemon=True)
+    print("Created process", p)
     p.start()
 
     app.run(host='0.0.0.0', port=5000,
@@ -158,7 +159,8 @@ if __name__ == '__main__':
     #something to keep checking afterwards
     while True:
         if not p.is_alive(): #check if controller is running
-            print("Controller process died!  Restarting…")
+            print("Controller process died!  Restarting.")
             p = Process(target=controller_function, daemon=True)
+            print("Created process", p)
             p.start()
         time.sleep(2)
