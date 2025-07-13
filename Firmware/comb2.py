@@ -35,12 +35,10 @@ def drive(left_speed, right_speed):
 def flywheels_on():
     GPIO.output(FLYWHEEL_AA, GPIO.HIGH)
     GPIO.output(FLYWHEEL_AB, GPIO.LOW)
-    pixels.fill((255, 0, 0))  # Red
 
 def flywheels_off():
     GPIO.output(FLYWHEEL_AA, GPIO.LOW)
     GPIO.output(FLYWHEEL_AB, GPIO.LOW)
-    pixels.fill((255, 255, 0))  # Yellow
 
 # ----- Shared state for flywheel control -----
 flywheel_state = {"on": False}
@@ -116,8 +114,10 @@ def hardware_update_loop():
             if current != last_state:
                 if current:
                     flywheels_on()
+                    pixels.fill((255, 0, 0))  # Red
                 else:
                     flywheels_off()
+                    pixels.fill((255, 255, 0))  # Yellow
                 last_state = current
 
             time.sleep(0.05)
