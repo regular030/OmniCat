@@ -1,0 +1,9 @@
+pygame
+RPi.GPIO
+time
+board
+neopixel
+Firmware.flask
+picamera2
+cv2
+time

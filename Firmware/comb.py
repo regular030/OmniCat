@@ -49,14 +49,6 @@ def flywheels_off():
 pygame.init()
 pygame.joystick.init()
 
-try:
-        joystick = pygame.joystick.Joystick(0)
-        joystick.init()
-        print(f"Connected to: {joystick.get_name()}")
-    except pygame.error:
-        print("No joystick detected. Please connect a PS4 controller.")
-        exit()
-
 def controller_function():
     try:
         while True:
@@ -94,7 +86,7 @@ def controller_function():
         GPIO.cleanup()
 
 
-# ----- setup the controller connection and pins -----
+# ----- setup camera io -----
 
 from Firmware.flask import Flask, Response
 from picamera2 import Picamera2
@@ -149,6 +141,13 @@ def video_feed():
           mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
-  thread = Process(target=controller_function)
-  thread.start()
-  app.run(host='0.0.0.0', port=5000)
+    try:
+        joystick = pygame.joystick.Joystick(0)
+        joystick.init()
+        print(f"Connected to: {joystick.get_name()}")
+    except pygame.error:
+        print("No joystick detected. Please connect a PS4 controller.")
+        exit()
+    process = Process(target=controller_function)
+    process.start()
+    app.run(host='0.0.0.0', port=5000)
