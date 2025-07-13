@@ -1,3 +1,4 @@
+import os
 import threading
 import pygame
 import RPi.GPIO as GPIO
@@ -7,6 +8,10 @@ import neopixel
 import cv2
 from flask import Flask, Response
 from picamera2 import Picamera2
+
+# Fix pygame segmentation fault when headless
+os.environ["SDL_VIDEODRIVER"] = "dummy"
+os.environ["SDL_AUDIODRIVER"] = "dummy"
 
 # ----- Setup GPIO and Neopixels -----
 LEFT_IN1 = 17
@@ -20,9 +25,7 @@ NEOPIXEL_PIN = board.D21
 NUM_PIXELS = 2
 BRIGHTNESS = 0.5
 
-pixels = neopixel.NeoPixel(
-    NEOPIXEL_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=False
-)
+pixels = neopixel.NeoPixel(NEOPIXEL_PIN, NUM_PIXELS, brightness=BRIGHTNESS, auto_write=False)
 neopixel_lock = threading.Lock()
 
 GPIO.setmode(GPIO.BCM)
@@ -65,7 +68,6 @@ def controller_function():
     try:
         while True:
             pygame.event.pump()
-
             x = joystick.get_axis(0)
             y = -joystick.get_axis(1)
 
@@ -85,7 +87,6 @@ def controller_function():
                     if not flywheel_state["on"]:
                         print("X button pressed — Flywheels ON")
                     flywheel_state["on"] = True
-
             elif joystick.get_button(1):
                 with flywheel_lock:
                     if flywheel_state["on"]:
@@ -137,17 +138,22 @@ def hardware_update_loop():
 # ----- Flask Camera Stream -----
 app = Flask(__name__)
 picam2 = Picamera2()
+picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
+picam2.start()
 
 def generate_frames():
     while True:
-        frame = picam2.capture_array()
-        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
-        ret, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
-        if not ret:
-            continue
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-        time.sleep(0.01)
+        try:
+            frame = picam2.capture_array()
+            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+            ret, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 70])
+            if not ret:
+                continue
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        except Exception as e:
+            print(f"Camera error: {e}")
+            time.sleep(1)
 
 @app.route('/')
 def index():
@@ -179,13 +185,17 @@ def video_feed():
 
 # ----- Main -----
 if __name__ == '__main__':
+    # Start controller thread
     controller_thread = threading.Thread(target=controller_function, daemon=True)
     controller_thread.start()
     print("Controller thread started.")
 
-    picam2.configure(picam2.create_video_configuration(main={"size": (640, 480)}))
-    picam2.start()
+    # Start Flask server in a thread
+    flask_thread = threading.Thread(target=lambda: app.run(host='0.0.0.0', port=5000), daemon=True)
+    flask_thread.start()
+    print("Flask server started on http://<pi-ip>:5000")
 
+    # Run the hardware update loop
     try:
         hardware_update_loop()
     except KeyboardInterrupt:
