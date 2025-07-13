@@ -53,7 +53,7 @@ try:
         joystick = pygame.joystick.Joystick(0)
         joystick.init()
         print(f"Connected to: {joystick.get_name()}")
-    except pygame.error:
+except pygame.error:
         print("No joystick detected. Please connect a PS4 controller.")
         exit()
 
