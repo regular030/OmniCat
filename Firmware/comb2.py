@@ -126,6 +126,9 @@ def hardware_update_loop():
     finally:
         drive(0, 0)
         flywheels_off()
+        pixels.fill((0, 0, 0))  # Turn off LEDs before exit
+        pixels.show()           # Update LEDs to off state
+        pixels.deinit()         # Clean up NeoPixel resources
         GPIO.cleanup()
 
 # ----- Flask Camera Stream -----
