@@ -1,4 +1,4 @@
-# OMNI OCTOCAT
+<img width="2778" height="1284" alt="image" src="https://github.com/user-attachments/assets/621069ad-c93d-4582-9209-490ec00d2e29" /># OMNI OCTOCAT
 
 For millions of us, Octocat has been a staple part of our lives, a hardworking and cheerful best friend. What would be more wonderful than to extend that friendship to the real world.
 
@@ -8,11 +8,8 @@ With the mission to build something intricate, wacky and helpful, we decided to 
 none other than Octocat itself!
 
 ## Brainstorming Process:
+<img width="2778" height="1284" alt="image" src="https://github.com/user-attachments/assets/a818c133-b49e-4b53-9fdf-799c3e41ce27" />
 
-
-<p align="center">
-  <img src="assets/yay.HEIC" alt="Preview" style="max-width: 47%; margin: 1em auto;" />
-</p>
 
 ## File Structure:
 - CAD
