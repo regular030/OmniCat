@@ -1,4 +1,4 @@
-# OMNI OCTOCAT
+# OMNICAT
 
 For millions of us, Octocat has been a staple part of our lives, a hardworking and cheerful best friend. What would be more wonderful than to extend that friendship to the real world.
 
