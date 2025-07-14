@@ -4,7 +4,7 @@ import pygame
 import RPi.GPIO as GPIO
 import time
 import board
-import neopixel
+import neopixel 
 import cv2
 from flask import Flask, Response
 from picamera2 import Picamera2

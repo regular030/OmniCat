@@ -88,7 +88,7 @@ def controller_function():
 
 # ----- setup the controller connection and pins -----
 
-from Firmware.flask import Flask, Response
+from flask import Flask, Response
 from picamera2 import Picamera2
 import cv2
 import time
