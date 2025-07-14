@@ -1,4 +1,4 @@
-<img width="2778" height="1284" alt="image" src="https://github.com/user-attachments/assets/621069ad-c93d-4582-9209-490ec00d2e29" /># OMNI OCTOCAT
+# OMNI OCTOCAT
 
 For millions of us, Octocat has been a staple part of our lives, a hardworking and cheerful best friend. What would be more wonderful than to extend that friendship to the real world.
 
