@@ -13,3 +13,17 @@ none other than Octocat itself!
 <p align="center">
   <img src="assets/yay.HEIC" alt="Preview" style="max-width: 47%; margin: 1em auto;" />
 </p>
+
+## File Structure:
+- CAD
+ - CAD/F3D Files for the project
+- Firmware
+  - The Firmware for this project
+- PCB
+  - The PCB for the project - not used in current deisgn
+- new cad
+  - STL and 3MF files for the chassis
+ - Unity
+  -  Unity files for hand Tracking
+ 
+   
