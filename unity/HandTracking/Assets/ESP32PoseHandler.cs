@@ -7,13 +7,18 @@ using System.Collections;
 
 public class ESP32PoseHandler : MonoBehaviour
 {
+    private int switchModeIndex = 0;
+    private readonly string[] switchModes = { "Mode 1", "Mode 2", "Mode 3" };
+
     public string esp32IP = "192.168.1.100";
     public int port = 4210;
     public TextMeshProUGUI statusText;
 
     private UdpClient client;
-    private string lastCommand = "";
-    private bool isSending = false;
+    private Coroutine sendLoop;
+    private string currentCommand = "";
+    private string currentGesture = "";
+    private bool isStopped = true;
 
     private enum InputMode { Hand, Controller }
     private InputMode currentMode = InputMode.Hand;
@@ -26,16 +31,11 @@ public class ESP32PoseHandler : MonoBehaviour
 
     void Update()
     {
-        // Triangle = JoystickButton3
         if (Input.GetKeyDown(KeyCode.JoystickButton3))
-        {
             ToggleInputMode();
-        }
 
         if (currentMode == InputMode.Controller)
-        {
             HandleControllerInput();
-        }
     }
 
     private void ToggleInputMode()
@@ -51,40 +51,60 @@ public class ESP32PoseHandler : MonoBehaviour
         float vertical = Input.GetAxis("Vertical");
         float horizontal = Input.GetAxis("Horizontal");
 
-        // Round small movements to 0 to avoid accidental drift
         if (Mathf.Abs(vertical) < 0.2f) vertical = 0;
         if (Mathf.Abs(horizontal) < 0.2f) horizontal = 0;
 
-        // Prioritize vertical before horizontal
         if (vertical > 0.5f)
-            SendCommand("Controller_Up", "back");
+            StartContinuousCommand("Controller_Up", "back");
         else if (vertical < -0.5f)
-            SendCommand("Controller_Down", "forwards");
+            StartContinuousCommand("Controller_Down", "forward");
         else if (horizontal < -0.5f)
-            SendCommand("Controller_Left", "left");
+            StartContinuousCommand("Controller_Left", "left");
         else if (horizontal > 0.5f)
-            SendCommand("Controller_Right", "right");
+            StartContinuousCommand("Controller_Right", "right");
         else
-            SendCommand("Controller_Stop", "stop");
+            StopCommand("Controller_Stop", "stop");
 
-        // Extra: X button to shoot
         if (Input.GetKeyDown(KeyCode.JoystickButton0))
-            SendCommand("Controller_X", "shoot");
+            SendSingleCommand("Controller_X", "shoot");
+        if (Input.GetKeyDown(KeyCode.JoystickButton1))
+            SendSingleCommand("Controller_O", "nod");
     }
 
-
-    private void SendCommand(string gesture, string command)
+    private void StartContinuousCommand(string gesture, string command)
     {
-        if (command == lastCommand || isSending) return;
-        StartCoroutine(SendWithDelay(gesture, command));
+        if (!isStopped && currentCommand == command) return;
+
+        StopExistingLoop();
+
+        currentGesture = gesture;
+        currentCommand = command;
+        sendLoop = StartCoroutine(SendRepeatedly());
+        isStopped = false;
     }
 
-    private IEnumerator SendWithDelay(string gesture, string command)
+    private void StopCommand(string gesture, string command)
     {
-        isSending = true;
-        yield return new WaitForSeconds(0.01f); // 10ms delay
-        lastCommand = command;
+        if (isStopped) return;
 
+        StopExistingLoop();
+
+        SendSingleCommand(gesture, command);
+        currentCommand = "";
+        isStopped = true;
+    }
+
+    private void StopExistingLoop()
+    {
+        if (sendLoop != null)
+        {
+            StopCoroutine(sendLoop);
+            sendLoop = null;
+        }
+    }
+
+    private void SendSingleCommand(string gesture, string command)
+    {
         try
         {
             byte[] data = Encoding.UTF8.GetBytes(command);
@@ -99,25 +119,44 @@ public class ESP32PoseHandler : MonoBehaviour
             Debug.LogError(error);
             UpdateStatus(error);
         }
+    }
 
-        isSending = false;
+    private IEnumerator SendRepeatedly()
+    {
+        while (true)
+        {
+            SendSingleCommand(currentGesture, currentCommand);
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     private void UpdateStatus(string message)
     {
         if (statusText != null)
-        {
             statusText.text = message;
-        }
     }
 
     // === Called from Unity Events (for hand tracking) ===
-    public void HandlePalm() { if (currentMode == InputMode.Hand) SendCommand("Palm", "forward"); }
-    public void HandleFist() { if (currentMode == InputMode.Hand) SendCommand("Fist", "back"); }
-    public void HandlePinky() { if (currentMode == InputMode.Hand) SendCommand("HangTen", "switch"); }
-    public void HandlePeace() { if (currentMode == InputMode.Hand) SendCommand("Peace", "left"); }
-    public void HandlePointer() { if (currentMode == InputMode.Hand) SendCommand("Pointer", "right"); }
-    public void HandleNone() { if (currentMode == InputMode.Hand) SendCommand("None", "stop"); }
+    public void HandlePalm() { if (currentMode == InputMode.Hand) StartContinuousCommand("Palm", "forward"); }
+    public void HandleFist() { if (currentMode == InputMode.Hand) StartContinuousCommand("Fist", "back"); }
+    public void HandlePinky()
+    {
+        if (currentMode != InputMode.Hand) return;
+
+        // Send "switch" command only once
+        SendSingleCommand("HangTen", "switch");
+
+        // Show current switch mode in status
+        string currentModeText = $"🔄 Switched to {switchModes[switchModeIndex]}";
+        Debug.Log(currentModeText);
+        UpdateStatus(currentModeText);
+
+        // Advance the mode index (loop back to 0 after 3)
+        switchModeIndex = (switchModeIndex + 1) % switchModes.Length;
+    }
+    public void HandlePeace() { if (currentMode == InputMode.Hand) StartContinuousCommand("Peace", "left"); }
+    public void HandlePointer() { if (currentMode == InputMode.Hand) StartContinuousCommand("Pointer", "right"); }
+    public void HandleNone() { if (currentMode == InputMode.Hand) StopCommand("None", "stop"); }
 
     void OnApplicationQuit()
     {
