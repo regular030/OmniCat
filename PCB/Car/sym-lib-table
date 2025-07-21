@@ -1,5 +1,0 @@
-(sym_lib_table
-  (version 7)
-  (lib (name "SC1176")(type "KiCad")(uri "${KIPRJMOD}/FilesNeeded/SC1176/SC1176.kicad_sym")(options "")(descr ""))
-  (lib (name "yaaj_dcdc_stepdown_lm2596")(type "Legacy")(uri "${KIPRJMOD}/FilesNeeded/lm2596/yaaj_dcdc_stepdown_lm2596.lib")(options "")(descr ""))
-)
