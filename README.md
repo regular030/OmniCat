@@ -16,8 +16,6 @@ none other than Octocat itself!
  - CAD/F3D Files for the project
 - Firmware
   - The Firmware for this project
-- PCB
-  - The PCB for the project - not used in current deisgn
 - new cad
   - STL and 3MF files for the chassis
  - Unity
