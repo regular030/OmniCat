@@ -1,7 +1,0 @@
-pygame
-RPi.GPIO
-board
-neopixel
-flask
-picamera2
-opencv-python
