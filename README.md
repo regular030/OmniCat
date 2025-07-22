@@ -22,12 +22,12 @@ With the mission to build something intricate, wacky and helpful, we decided to 
 
 ## File Structure:
 - CAD
- - CAD/F3D Files for the project
+  - CAD/F3D Files for the project
 - Firmware
   - The Firmware for this project
 - new cad
   - STL and 3MF files for the chassis
  - Unity
-  -  Unity files for hand Tracking
+   -  Unity files for hand Tracking
  
    
