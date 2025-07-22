@@ -4,6 +4,7 @@ For millions of us, Octocat has been a staple part of our lives, a hardworking a
 Go check out the journal for our progress and watch our youtube demo here!: https://www.youtube.com/watch?v=gtOdOln78Yw
 
 What does omnicat do?
+
 Feature 1: RC Car
 Omnicat is a 4 wheel drive RC car that can be steered either by a traditional game controller or asynchronously through a Leap Motion Sensor with the gesture tracking bindings demonstrated in the video:
 Open palm: forward; Fist: backward; Pointer: right; Peace: left; Hang Ten: mode switch
