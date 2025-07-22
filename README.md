@@ -15,7 +15,6 @@ Hello! This is our submission project for Hack Club's Highway Hackathon at Githu
 With the mission to build something intricate, wacky and helpful, we decided to build a personal home assistant:
 none other than Octocat itself!
 
-## Brainstorming Process:
 <img width="2778" height="1284" alt="image" src="https://github.com/user-attachments/assets/a818c133-b49e-4b53-9fdf-799c3e41ce27" />
 
 
