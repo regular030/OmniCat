@@ -1,7 +1,7 @@
 # OMNICAT
 
 For millions of us, Octocat has been a staple part of our lives, a hardworking and cheerful best friend. What would be more wonderful than to extend that friendship to the real world.
-Go watch our youtube demo here!: https://www.youtube.com/watch?v=gtOdOln78Yw
+Go check out the journal for our progress and watch our youtube demo here!: https://www.youtube.com/watch?v=gtOdOln78Yw
 
 What does omnicat do?
 Feature 1: RC Car
@@ -12,8 +12,7 @@ Feature 2: Git Desk Decoration
 The OLED on the back displays live details about your Github that are important for easy access, such as number of stars or pull requests on a target repository. You can switch through the display modes using your controller/depth sensor.
 
 Hello! This is our submission project for Hack Club's Highway Hackathon at Github HQ.
-With the mission to build something intricate, wacky and helpful, we decided to build a personal home assistant:
-none other than Octocat itself!
+With the mission to build something intricate, wacky and helpful, we decided to build a personal home assistant: none other than Octocat itself!
 
 <img width="2778" height="1284" alt="image" src="https://github.com/user-attachments/assets/a818c133-b49e-4b53-9fdf-799c3e41ce27" />
 
