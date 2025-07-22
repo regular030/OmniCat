@@ -17,6 +17,8 @@ With the mission to build something intricate, wacky and helpful, we decided to 
 
 <img width="2778" height="1284" alt="image" src="https://github.com/user-attachments/assets/a818c133-b49e-4b53-9fdf-799c3e41ce27" />
 
+## Wiring Diagram:
+<img width="719" height="498" alt="image" src="https://github.com/user-attachments/assets/d75c1d5d-aaec-4328-8963-89989126dc3e" />
 
 ## File Structure:
 - CAD
